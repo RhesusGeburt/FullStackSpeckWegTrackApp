@@ -8,15 +8,15 @@ root.title("Startseite")
 root.geometry("1000x700")
 root.minsize(700, 500)
 root.state("zoomed")
-root.configure(bg="#1e1e32")
+root.configure(bg="#121417")
 
-BG = "#3f3f73"
-CARD = "#2E2EF4"
-INPUT = "#2c2c40"
-PURPLE = "#7349dc"
-HOVER = "#a78bfa"
-WHITE = "#ffffff"
-LIGHT_PURPLE = "#c0aef4"
+BG = "#1C2025"
+CARD = "#252B32"
+INPUT = "#191D22"
+PRIMARY = "#3B82F6"
+HOVER = "#60A5FA"
+WHITE = "#F9FAFB"
+LIGHT_TEXT = "#A1A1AA"
 
 karte = tk.Frame(root, bg=CARD, padx=60, pady=45
                  )
@@ -62,7 +62,7 @@ def ask_username():
 
         ausgabe.config(
             text=f"Hallo {username}!",
-            fg=LIGHT_PURPLE
+            fg=LIGHT_TEXT
         )
 
         eingabe.delete(0, tk.END)
@@ -76,7 +76,7 @@ def ask_username():
 
 
 button = tk.Button(karte, text="Bestätigen", command=ask_username,
-                   font=("Arial", 14, "bold"), bg=PURPLE, fg=WHITE,
+                   font=("Arial", 14, "bold"), bg=LIGHT_TEXT, fg=WHITE,
                    activebackground=HOVER,  activeforeground=WHITE, relief="flat",
                    cursor="hand2", padx=35, pady=12)
 
@@ -88,14 +88,14 @@ def hover_on(event):
 
 
 def hover_off(event):
-    button.config(bg=PURPLE)
+    button.config(bg=LIGHT_TEXT)
 
 
 button.bind("<Enter>", hover_on)
 button.bind("<Leave>", hover_off)
 
 ausgabe = tk.Label(
-    karte, text="", font=("Arial", 20, "bold"), fg=LIGHT_PURPLE, bg=CARD
+    karte, text="", font=("Arial", 20, "bold"), fg=LIGHT_TEXT, bg=CARD
 )
 
 ausgabe.pack(pady=20)
