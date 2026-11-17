@@ -1,15 +1,17 @@
 
 import tkinter as tk
+import database as db
+
 
 root = tk.Tk()
 root.title("Startseite")
 root.geometry("1000x700")
 root.minsize(700, 500)
 root.state("zoomed")
-root.configure(bg="#1e1e2e")
+root.configure(bg="#1e1e32")
 
-BG = "#1e1e2e"
-CARD = "#242438"
+BG = "#3f3f73"
+CARD = "#2E2EF4"
 INPUT = "#2c2c40"
 PURPLE = "#7349dc"
 HOVER = "#a78bfa"
@@ -42,7 +44,21 @@ def ask_username():
 
     username = eingabe.get().strip()
 
-    if username:
+    if len(username) < 3:
+
+        ausgabe.config(
+            text="Username muss mindestens 3 Zeichen haben!",
+            fg="#ff6b81"
+        )
+
+    elif len(username) > 30:
+
+        ausgabe.config(
+            text="Username darf maximal 30 Zeichen haben!",
+            fg="#ff6b81"
+        )
+
+    elif username:
 
         ausgabe.config(
             text=f"Hallo {username}!",
