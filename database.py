@@ -10,6 +10,7 @@ def initialize():
         CREATE TABLE IF NOT EXISTS users(
             id INTEGER PRIMARY KEY,
             name TEXT NOT NULL,
+            password TEXT NOT NULL,
             age INTEGER NOT NULL,
             height INTEGER NOT NULL
         );
@@ -20,19 +21,22 @@ def initialize():
         """
         CREATE TABLE IF NOT EXISTS weights(
             id INTEGER PRIMARY KEY,
-            weight INTEGER NOT NULL,
+            user INTEGER NOT NULL,
+            weight REAL NOT NULL,
             date TEXT NOT NULL
         );
         """
     )
+    connection.commit()
+    connection.close()
 
 
-def add_weight(id, weight, date):
+def add_weight(user, weight, date):
     connection = sqlite3.connect("speckweg.db")
     cursor = connection.cursor()
     cursor.execute(
-        "INSERT INTO weights (id, weight, date) VALUES (?, ?, ?)",
-        (id, weight, date),
+        "INSERT INTO weights (user, weight, date) VALUES (?, ?, ?)",
+        (user, weight, date),
     )
     connection.commit()
 
@@ -52,6 +56,13 @@ def get_id(name):
     rows = connection.execute(
         "SELECT id FROM users WHERE name LIKE (?)", (name,)).fetchall()
     return rows
+
+
+def get_users():
+    connection = sqlite3.connect("speckweg.db")
+    users = connection.execute(
+        "SELECT name FROM users").fetchall()
+    return users
 
 
 def get_history(id):
