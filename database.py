@@ -9,10 +9,10 @@ def initialize():
         """
         CREATE TABLE IF NOT EXISTS users(
             id INTEGER PRIMARY KEY,
-            name TEXT NOT NULL,
+            name TEXT NOT NULL UNIQUE,
             password TEXT NOT NULL,
-            age INTEGER NOT NULL,
-            height INTEGER NOT NULL
+            age INTEGER,
+            height INTEGER
         );
         """
     )
@@ -41,12 +41,32 @@ def add_weight(user, weight, date):
     connection.commit()
 
 
-def add_user(name, age, height):
+def add_user(name, password):
     connection = sqlite3.connect("speckweg.db")
     cursor = connection.cursor()
     cursor.execute(
-        "INSERT INTO users (name, age, height) VALUES (?, ?, ?)",
-        (name, age, height),
+        "INSERT INTO users (name, password) VALUES (?, ?)",
+        (name, password),
+    )
+    connection.commit()
+
+
+def set_age(id, age):
+    connection = sqlite3.connect("speckweg.db")
+    cursor = connection.cursor()
+    cursor.execute(
+        "UPDATE users SET age = (?) WHERE id = (?)",
+        (age, id),
+    )
+    connection.commit()
+
+
+def set_height(id, height):
+    connection = sqlite3.connect("speckweg.db")
+    cursor = connection.cursor()
+    cursor.execute(
+        "UPDATE users SET height = (?) WHERE id = (?)",
+        (height, id),
     )
     connection.commit()
 
@@ -65,11 +85,11 @@ def get_users():
     return users
 
 
-def get_history(id):
+def get_history(user):
     connection = sqlite3.connect("speckweg.db")
     history = connection.execute(
-        "SELECT weight, date FROM weights WHERE id = (?) ORDER BY date",
-        (id,),).fetchall()
+        "SELECT weight, date FROM weights WHERE user = (?) ORDER BY date",
+        (user,),).fetchall()
     return history
 
 
