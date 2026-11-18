@@ -39,21 +39,11 @@ def add_weight(user, weight, date):
 
 
 def add_user(name):
-    with sqlite3.connect("speckweg.db") as connection:
-        cursor = connection.cursor()
-
-        cursor.execute(
-            "INSERT INTO users (name) VALUES (?)",
-            (name),
-        )
-
-
-def add_user(name, password):
     connection = sqlite3.connect("speckweg.db")
     cursor = connection.cursor()
     cursor.execute(
-        "INSERT INTO users (name, password) VALUES (?, ?)",
-        (name, password),
+        "INSERT INTO users (name) VALUES (?)",
+        (name,),
     )
     connection.commit()
 

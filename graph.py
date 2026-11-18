@@ -1,11 +1,9 @@
 import matplotlib.dates as mdates
 import matplotlib.ticker
 from matplotlib.figure import Figure
-from matplotlib.backends.backend_tkagg import (FigureCanvasTkAgg,
-                                               NavigationToolbar2Tk)
-import datetime as date
+from matplotlib.backends.backend_tkagg import (FigureCanvasTkAgg,                                               NavigationToolbar2Tk)
 import database as db
-
+from datetime import datetime
 
 def make_graph(userID):
     history = db.get_history(userID)
@@ -21,7 +19,9 @@ def make_graph(userID):
         )
         return fig
 
-    dates, weights = zip(*history)
+    weights, dates = zip(*history)
+
+    dates = [datetime.fromisoformat(date) for date in dates]
 
     plot1 = fig.add_subplot()
 
@@ -35,6 +35,6 @@ def make_graph(userID):
     plot1.set_ylabel("Weight in kg")
     plot1.set_xlabel("Time")
 
-    plot1.plot(weights, dates)
+    plot1.plot(dates, weights)
 
     return fig

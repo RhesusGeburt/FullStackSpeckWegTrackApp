@@ -1,8 +1,9 @@
-
+from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
 import tkinter as tk
 import database as db
 from datetime import date
 import main
+import graph
 
 main.start()
 
@@ -82,11 +83,12 @@ def dashboard(username, user_id):
 
     gewicht_button = tk.Button(sidebar, text="Gewicht", font=("Arial", 13),
                                bg="#1B2430", fg=WHITE, relief="flat",
-                               command=lambda: gewicht_anzeigen(user_id))
+                               command=lambda: gewicht_anzeigen(username, user_id))
     gewicht_button.pack(fill="x", padx=15, pady=8)
 
     historie_button = tk.Button(sidebar, text="Historie", font=(
-        "Arial", 13), bg="#1B2430", fg=WHITE, relief="flat")
+        "Arial", 13), bg="#1B2430", fg=WHITE, relief="flat",
+        command=lambda: historie_anzeigen(username, user_id))
     historie_button.pack(fill="x", padx=15, pady=8)
 
     profil_button = tk.Button(sidebar, text="Profil", font=(
@@ -217,7 +219,7 @@ def gewicht_anzeigen(username, user_id):
                     text="Bitte gib ein gültiges Gewicht ein!", fg="#ff6b81")
                 return
 
-            db.add_weight(user_id, gewicht, date.today().isoformat())
+            db.add_weight(user_id, gewicht, date.datetime.now())
 
             ausgabe.config(
                 text="Gewicht erfolgreich gespeichert!", fg="#4ADE80")
@@ -232,6 +234,43 @@ def gewicht_anzeigen(username, user_id):
                                  fg=WHITE, activebackground=HOVER, relief="flat",
                                  cursor="hand2", padx=25, pady=12, command=speichern)
     speichern_button.pack(pady=10)
+
+def historie_anzeigen(username, user_id):
+
+    for widget in root.winfo_children():
+        widget.destroy()
+
+    root.configure(bg="#121820")
+
+    fig1 = graph.make_graph(user_id)
+
+    hauptbereich = tk.Frame(root, bg="#121820")
+    hauptbereich.pack(fill="both", expand=True)
+
+    zurueck_button = tk.Button(hauptbereich, text="← Zurück zum Dashboard",
+                               font=("Arial", 12), bg="#1B2430", fg=WHITE,
+                               activebackground="#252F3B", relief="flat",
+                               cursor="hand2", padx=20, pady=10,
+                               command=lambda: dashboard(username, user_id))
+    zurueck_button.pack(anchor="w", padx=50, pady=(20, 0))
+
+    titel = tk.Label(hauptbereich, text="Dein Fortschritt",
+                     font=("Arial", 30, "bold"), fg=WHITE, bg="#121820")
+    titel.pack(anchor="w", padx=50, pady=(50, 10))
+
+
+    fig1.set_size_inches(12, 7)
+
+    canvas = FigureCanvasTkAgg(fig1, master=hauptbereich)
+    canvas.draw()
+
+    canvas.get_tk_widget().pack(
+        anchor="nw",
+        padx=50,
+        pady=20,
+        fill="both",
+        expand=True
+    )
 
 
 def startseite():
@@ -276,7 +315,7 @@ def startseite():
                 text=f"Willkommen zurück, {username}!", fg=LIGHT_TEXT)
 
         else:
-            db.add_user(username, "token")
+            db.add_user(username)
             ausgabe.config(
                 text=f"Neuer Benutzer {username} wurde erstellt!", fg=LIGHT_TEXT)
 
