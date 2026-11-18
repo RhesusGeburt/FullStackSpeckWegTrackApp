@@ -10,7 +10,6 @@ def initialize():
         CREATE TABLE IF NOT EXISTS users(
             id INTEGER PRIMARY KEY,
             name TEXT NOT NULL UNIQUE,
-            password TEXT NOT NULL,
             age INTEGER,
             height INTEGER
         );
@@ -32,65 +31,59 @@ def initialize():
 
 
 def add_weight(user, weight, date):
-    connection = sqlite3.connect("speckweg.db")
-    cursor = connection.cursor()
-    cursor.execute(
-        "INSERT INTO weights (user, weight, date) VALUES (?, ?, ?)",
-        (user, weight, date),
-    )
-    connection.commit()
+    with sqlite3.connect("speckweg.db") as connection:
+        connection.execute(
+            "INSERT INTO weights (user, weight, date) VALUES (?, ?, ?)",
+            (user, weight, date)
+        )
 
 
-def add_user(name, password):
+def add_user(name):
     with sqlite3.connect("speckweg.db") as connection:
         cursor = connection.cursor()
 
         cursor.execute(
-            "INSERT INTO users (name, password) VALUES (?, ?)",
-            (name, password),
+            "INSERT INTO users (name) VALUES (?)",
+            (name),
         )
 
 
 def set_age(id, age):
-    connection = sqlite3.connect("speckweg.db")
-    cursor = connection.cursor()
-    cursor.execute(
-        "UPDATE users SET age = (?) WHERE id = (?)",
-        (age, id),
-    )
-    connection.commit()
+    with sqlite3.connect("speckweg.db") as connection:
+        connection.execute(
+            "UPDATE users SET age = ? WHERE id = ?",
+            (age, id)
+        )
 
 
 def set_height(id, height):
-    connection = sqlite3.connect("speckweg.db")
-    cursor = connection.cursor()
-    cursor.execute(
-        "UPDATE users SET height = (?) WHERE id = (?)",
-        (height, id),
-    )
-    connection.commit()
+    with sqlite3.connect("speckweg.db") as connection:
+        connection.execute(
+            "UPDATE users SET height = ? WHERE id = ?",
+            (height, id)
+        )
 
 
 def get_id(name):
-    connection = sqlite3.connect("speckweg.db")
-    rows = connection.execute(
-        "SELECT id FROM users WHERE name LIKE (?)", (name,)).fetchall()
-    return rows
+    with sqlite3.connect("speckweg.db") as connection:
+        return connection.execute(
+            "SELECT id FROM users WHERE name = ?", (name,)
+        ).fetchall()
 
 
 def get_users():
-    connection = sqlite3.connect("speckweg.db")
-    users = connection.execute(
-        "SELECT name FROM users").fetchall()
-    return users
+    with sqlite3.connect("speckweg.db") as connection:
+        return connection.execute(
+            "SELECT name FROM users"
+        ).fetchall()
 
 
 def get_history(user):
-    connection = sqlite3.connect("speckweg.db")
-    history = connection.execute(
-        "SELECT weight, date FROM weights WHERE user = (?) ORDER BY date",
-        (user,),).fetchall()
-    return history
+    with sqlite3.connect("speckweg.db") as connection:
+        return connection.execute(
+            "SELECT weight, date FROM weights WHERE user = ? ORDER BY date",
+            (user,)
+        ).fetchall()
 
 
 def reset_db():
@@ -103,3 +96,11 @@ def reset_db():
     connection.close()
 
     initialize()
+
+
+def get_latest_weight(user):
+    with sqlite3.connect("speckweg.db") as connection:
+        return connection.execute(
+            "SELECT weight FROM weights WHERE user = ? ORDER BY date DESC, id DESC LIMIT 1",
+            (user,)
+        ).fetchone()
