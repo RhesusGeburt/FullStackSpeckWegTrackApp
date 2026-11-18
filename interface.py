@@ -276,7 +276,7 @@ def startseite():
                 text=f"Willkommen zurück, {username}!", fg=LIGHT_TEXT)
 
         else:
-            db.add_user(username)
+            db.add_user(username, "token")
             ausgabe.config(
                 text=f"Neuer Benutzer {username} wurde erstellt!", fg=LIGHT_TEXT)
 
