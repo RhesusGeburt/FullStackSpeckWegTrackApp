@@ -160,7 +160,7 @@ def dashboard(username, user_id):
     fortschritt_wert.pack(anchor="w", pady=(10, 0))
 
 
-def gewicht_anzeigen(user_id):
+def gewicht_anzeigen(username, user_id):
 
     for widget in root.winfo_children():
         widget.destroy()
@@ -169,6 +169,13 @@ def gewicht_anzeigen(user_id):
 
     hauptbereich = tk.Frame(root, bg="#121820")
     hauptbereich.pack(fill="both", expand=True)
+
+    zurueck_button = tk.Button(hauptbereich, text="← Zurück zum Dashboard",
+                               font=("Arial", 12), bg="#1B2430", fg=WHITE,
+                               activebackground="#252F3B", relief="flat",
+                               cursor="hand2", padx=20, pady=10,
+                               command=lambda: dashboard(username, user_id))
+    zurueck_button.pack(anchor="w", padx=50, pady=(20, 0))
 
     titel = tk.Label(hauptbereich, text="Gewicht eintragen",
                      font=("Arial", 30, "bold"), fg=WHITE, bg="#121820")
