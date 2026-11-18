@@ -1,13 +1,11 @@
 import database as db
-import datetime as date
 
 
-db.initialize()
-db.add_user("Jakob", 25, 182)
-jakob = int(db.get_id("Jakob")[0][0])
-print(jakob)
-db.add_weight(1, 79.2, date.datetime.now())
+def start():
+    db.initialize()
 
-jakob_history = db.get_history(jakob)
+    print("Benutzer:")
+    print(db.get_users())
 
-print(print(db.get_users()))
+    print("Benutzer-ID von Jakob:")
+    print(db.get_id("Jakob"))

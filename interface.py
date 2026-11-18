@@ -1,7 +1,9 @@
 
 import tkinter as tk
 import database as db
+import main
 
+main.start()
 
 root = tk.Tk()
 root.title("Startseite")
@@ -45,34 +47,35 @@ def ask_username():
     username = eingabe.get().strip()
 
     if len(username) < 3:
-
         ausgabe.config(
             text="Username muss mindestens 3 Zeichen haben!",
             fg="#ff6b81"
         )
+        return
 
     elif len(username) > 30:
-
         ausgabe.config(
             text="Username darf maximal 30 Zeichen haben!",
             fg="#ff6b81"
         )
+        return
 
-    elif username:
+    user_id = db.get_id(username)
 
+    if user_id:
         ausgabe.config(
-            text=f"Hallo {username}!",
+            text=f"Willkommen zurück, {username}!",
             fg=LIGHT_TEXT
         )
 
-        eingabe.delete(0, tk.END)
-
     else:
-
+        db.add_user(username, "esek")
         ausgabe.config(
-            text="Bitte Username eingeben!",
-            fg="#ff6b81"
+            text=f"Neuer Benutzer {username} wurde erstellt!",
+            fg=LIGHT_TEXT
         )
+
+    eingabe.delete(0, tk.END)
 
 
 button = tk.Button(karte, text="Bestätigen", command=ask_username,
@@ -103,5 +106,8 @@ ausgabe.pack(pady=20)
 root.bind("<Return>", lambda event: ask_username())
 
 eingabe.focus_set()
+
+for user in db.get_users():
+    print(user[0])
 
 root.mainloop()

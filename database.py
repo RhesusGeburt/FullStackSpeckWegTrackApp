@@ -42,13 +42,13 @@ def add_weight(user, weight, date):
 
 
 def add_user(name, password):
-    connection = sqlite3.connect("speckweg.db")
-    cursor = connection.cursor()
-    cursor.execute(
-        "INSERT INTO users (name, password) VALUES (?, ?)",
-        (name, password),
-    )
-    connection.commit()
+    with sqlite3.connect("speckweg.db") as connection:
+        cursor = connection.cursor()
+
+        cursor.execute(
+            "INSERT INTO users (name, password) VALUES (?, ?)",
+            (name, password),
+        )
 
 
 def set_age(id, age):
@@ -95,6 +95,11 @@ def get_history(user):
 
 def reset_db():
     connection = sqlite3.connect("speckweg.db")
-    rows = connection.execute("DROP TABLE users")
-    rows = connection.execute("DROP TABLE weights")
+
+    connection.execute("DROP TABLE IF EXISTS users")
+    connection.execute("DROP TABLE IF EXISTS weights")
+
+    connection.commit()
+    connection.close()
+
     initialize()
