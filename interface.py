@@ -2,6 +2,7 @@ from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
 import tkinter as tk
 import database as db
 from datetime import datetime
+from tkinter import messagebox
 import main
 import graph
 
@@ -70,59 +71,51 @@ def dashboard(username, user_id):
     sidebar.pack(side="left", fill="y")
     sidebar.pack_propagate(False)
 
+    tk.Label(sidebar, text="SPECKWEG", font=("Arial", 22, "bold"),
+             fg=WHITE, bg="#1B2430").pack(pady=40)
+
+    tk.Button(sidebar, text="Dashboard", font=("Arial", 13), bg="#252F3B",
+              fg=WHITE, relief="flat",
+              command=lambda: dashboard(username, user_id)).pack(fill="x",
+                                                                 padx=15, pady=8)
+
+    tk.Button(sidebar, text="Gewicht", font=("Arial", 13), bg="#1B2430", fg=WHITE,
+              relief="flat", command=lambda: gewicht_anzeigen(username, user_id)).pack(fill="x",
+                                                                                       padx=15, pady=8)
+
+    tk.Button(sidebar, text="Historie", font=("Arial", 13), bg="#1B2430", fg=WHITE, relief="flat",
+              command=lambda: historie_anzeigen(username, user_id)).pack(fill="x", padx=15, pady=8)
+
+    tk.Button(sidebar, text="Profil", font=("Arial", 13), bg="#1B2430", fg=WHITE, relief="flat",
+              command=lambda: profil_anzeigen(username, user_id)).pack(fill="x", padx=15, pady=8)
+
+    tk.Button(sidebar, text="Einstellungen", font=("Arial", 13), bg="#1B2430",
+              fg=WHITE, relief="flat", command=lambda: einstellungen_anzeigen(username, user_id)).pack(fill="x",
+                                                                                                       padx=15, pady=8)
+
     hauptbereich = tk.Frame(root, bg="#121820")
     hauptbereich.pack(side="left", fill="both", expand=True)
 
-    titel = tk.Label(sidebar, text="SPECKWEG", font=(
-        "Arial", 22, "bold"), fg=WHITE, bg="#1B2430")
-    titel.pack(pady=40)
+    tk.Label(hauptbereich, text="Dashboard", font=("Arial", 30, "bold"),
+             fg=WHITE, bg="#121820").pack(anchor="w", padx=50, pady=(40, 15))
 
-    dashboard_button = tk.Button(sidebar, text="Dashboard", font=(
-        "Arial", 13), bg="#252F3B", fg=WHITE, relief="flat")
-    dashboard_button.pack(fill="x", padx=15, pady=8)
+    tk.Label(hauptbereich, text=f"Willkommen zurück, {username}!", font=(
+        "Arial", 16, "bold"), fg="#94A3B8", bg="#121820").pack(anchor="w",
+                                                               padx=50, pady=5)
 
-    gewicht_button = tk.Button(sidebar, text="Gewicht", font=("Arial", 13),
-                               bg="#1B2430", fg=WHITE, relief="flat",
-                               command=lambda: gewicht_anzeigen(username, user_id))
-    gewicht_button.pack(fill="x", padx=15, pady=8)
-
-    historie_button = tk.Button(sidebar, text="Historie", font=(
-        "Arial", 13), bg="#1B2430", fg=WHITE, relief="flat",
-        command=lambda: historie_anzeigen(username, user_id))
-    historie_button.pack(fill="x", padx=15, pady=8)
-
-    profil_button = tk.Button(sidebar, text="Profil", font=(
-        "Arial", 13), bg="#1B2430", fg=WHITE, relief="flat")
-    profil_button.pack(fill="x", padx=15, pady=8)
-
-    einstellungen_button = tk.Button(sidebar, text="Einstellungen", font=(
-        "Arial", 13), bg="#1B2430", fg=WHITE, relief="flat")
-    einstellungen_button.pack(fill="x", padx=15, pady=8)
-
-    ueberschrift = tk.Label(hauptbereich, text="Dashboard", font=(
-        "Arial", 30, "bold"), fg=WHITE, bg="#121820")
-    ueberschrift.pack(anchor="w", padx=50, pady=40)
-
-    begrüssung = tk.Label(hauptbereich, text=f"Willkommen zurück, {username}!", font=(
-        "Arial", 16, "bold"), fg="#94A3B8", bg="#121820")
-    begrüssung.pack(anchor="ne", padx=50, pady=10)
-
-    untertitel = tk.Label(hauptbereich, text="Willkommen bei Speckweg!", font=(
-        "Arial", 14), fg="#94A3B8", bg="#121820")
-    untertitel.pack(anchor="w", padx=50)
+    tk.Label(hauptbereich, text="Willkommen bei Speckweg!", font=(
+        "Arial", 14), fg="#94A3B8", bg="#121820").pack(anchor="w", padx=50, pady=5)
 
     kartenbereich = tk.Frame(hauptbereich, bg="#121820")
     kartenbereich.pack(anchor="nw", padx=50, pady=30)
 
-    karte = tk.Frame(kartenbereich, bg="#252F3B", padx=30, pady=25,
-                     width=450, height=180, highlightbackground="#3B82F6",
-                     highlightthickness=1)
-    karte.pack(side="left", padx=(0, 20))
-    karte.pack_propagate(False)
+    karte1 = tk.Frame(kartenbereich, bg="#252F3B", padx=30, pady=25, width=350,
+                      height=180, highlightbackground="#3B82F6", highlightthickness=1)
+    karte1.pack(side="left", padx=(0, 20))
+    karte1.pack_propagate(False)
 
-    gewicht_titel = tk.Label(karte, text="Aktuelles Gewicht", font=(
-        "Arial", 13), fg="#94A3B8", bg="#252F3B")
-    gewicht_titel.pack(anchor="w")
+    tk.Label(karte1, text="Aktuelles Gewicht", font=("Arial", 13),
+             fg="#94A3B8", bg="#252F3B").pack(anchor="w")
 
     letztes_gewicht = db.get_latest_weight(user_id)
 
@@ -131,35 +124,43 @@ def dashboard(username, user_id):
     else:
         gewicht_text = "Noch kein Gewicht eingetragen"
 
-    gewicht_wert = tk.Label(karte, text=gewicht_text, font=(
-        "Arial", 20, "bold"), fg=WHITE, bg="#252F3B")
-    gewicht_wert.pack(anchor="w", pady=(10, 0))
+    tk.Label(karte1, text=gewicht_text, font=("Arial", 20, "bold"),
+             fg=WHITE, bg="#252F3B").pack(anchor="w", pady=(15, 0))
 
-    karte2 = tk.Frame(kartenbereich, bg="#252F3B", padx=30, pady=25, width=450,
-                      height=180, highlightbackground="#3B82F6", highlightthickness=1)
-    karte2.pack(side="left")
-    karte2.pack_propagate(False)
-
-    fortschritt_titel = tk.Label(karte2, text="Dein Fortschritt", font=(
-        "Arial", 13), fg="#94A3B8", bg="#252F3B")
-    fortschritt_titel.pack(anchor="w")
-
-    fortschritt_wert = tk.Label(karte2, text="Noch keine Daten vorhanden", font=(
-        "Arial", 16, "bold"), fg=WHITE, bg="#252F3B")
-    fortschritt_wert.pack(anchor="w", pady=(10, 0))
-
-    karte2 = tk.Frame(kartenbereich, bg="#252F3B", padx=30, pady=25, width=450,
-                      height=180, highlightbackground="#3B82F6",
+    karte2 = tk.Frame(kartenbereich, bg="#252F3B", padx=30, pady=25,
+                      width=350, height=180, highlightbackground="#3B82F6",
                       highlightthickness=1)
     karte2.pack(side="left")
     karte2.pack_propagate(False)
-    fortschritt_titel = tk.Label(karte2, text="Dein Fortschritt", font=(
-        "Arial", 13), fg="#94A3B8", bg="#252F3B")
-    fortschritt_titel.pack(anchor="w")
 
-    fortschritt_wert = tk.Label(karte2, text="Noch keine Daten vorhanden", font=(
-        "Arial", 16, "bold"), fg=WHITE, bg="#252F3B")
-    fortschritt_wert.pack(anchor="w", pady=(10, 0))
+    tk.Label(karte2, text="Dein Fortschritt", font=("Arial", 13),
+             fg="#94A3B8", bg="#252F3B").pack(anchor="w")
+
+    history = db.get_history(user_id)
+
+    if len(history) >= 2:
+        startgewicht = history[0][0]
+        aktuelles_gewicht = history[-1][0]
+        differenz = round(startgewicht - aktuelles_gewicht, 2)
+
+        if differenz > 0:
+            fortschritt_text = f"{differenz} kg abgenommen"
+            farbe = "#4ADE80"
+        elif differenz < 0:
+            fortschritt_text = f"{abs(differenz)} kg zugenommen"
+            farbe = "#F87171"
+        else:
+            fortschritt_text = "Gewicht unverändert"
+            farbe = WHITE
+    elif len(history) == 1:
+        fortschritt_text = "Noch einen Eintrag hinzufügen"
+        farbe = WHITE
+    else:
+        fortschritt_text = "Noch keine Daten vorhanden"
+        farbe = WHITE
+
+    tk.Label(karte2, text=fortschritt_text, font=("Arial", 17, "bold"), fg=farbe,
+             bg="#252F3B").pack(anchor="w", pady=(15, 0))
 
 
 def gewicht_anzeigen(username, user_id):
@@ -271,6 +272,106 @@ def historie_anzeigen(username, user_id):
         fill="both",
         expand=True
     )
+
+
+def abmelden():
+    for widget in root.winfo_children():
+        widget.destroy()
+
+    root.configure(bg="#121417")
+
+    global karte
+    karte = tk.Frame(root, bg=CARD, padx=60, pady=45)
+    karte.place(relx=0.5, rely=0.5, anchor="center")
+
+    startseite()
+
+
+def profil_anzeigen(username, user_id):
+
+    for widget in root.winfo_children():
+        widget.destroy()
+
+    root.configure(bg="#121820")
+
+    hauptbereich = tk.Frame(root, bg="#121820")
+    hauptbereich.pack(fill="both", expand=True)
+
+    zurueck = tk.Button(hauptbereich, text="← Zurück zum Dashboard", font=(
+        "Arial", 12), bg="#1B2430", fg=WHITE, relief="flat", command=lambda: dashboard(username, user_id))
+    zurueck.pack(anchor="w", padx=50, pady=30)
+
+    titel = tk.Label(hauptbereich, text="Mein Profil", font=(
+        "Arial", 30, "bold"), fg=WHITE, bg="#121820")
+    titel.pack(anchor="w", padx=50, pady=30)
+
+    profilkarte = tk.Frame(hauptbereich, bg="#252F3B", padx=40, pady=35)
+    profilkarte.pack(anchor="nw", padx=50)
+
+    tk.Label(profilkarte, text="Benutzername", font=("Arial", 13),
+             fg="#94A3B8", bg="#252F3B").pack(anchor="w")
+
+    tk.Label(profilkarte, text=username, font=("Arial", 22, "bold"),
+             fg=WHITE, bg="#252F3B").pack(anchor="w", pady=(5, 25))
+
+    abmelden_button = tk.Button(profilkarte, text="Abmelden", font=("Arial", 14, "bold"), bg=PRIMARY,
+                                fg=WHITE, activebackground=HOVER, relief="flat", cursor="hand2", padx=30, pady=12, command=abmelden)
+    abmelden_button.pack(anchor="w")
+
+
+def einstellungen_anzeigen(username, user_id):
+
+    for widget in root.winfo_children():
+        widget.destroy()
+
+    root.configure(bg="#121820")
+
+    hauptbereich = tk.Frame(root, bg="#121820")
+    hauptbereich.pack(fill="both", expand=True)
+
+    zurueck = tk.Button(hauptbereich, text="← Zurück zum Dashboard", font=("Arial", 12),
+                        bg="#1B2430", fg=WHITE, relief="flat",
+                        command=lambda: dashboard(username, user_id))
+    zurueck.pack(anchor="w", padx=50, pady=30)
+
+    titel = tk.Label(hauptbereich, text="Einstellungen", font=("Arial", 30, "bold"),
+                     fg=WHITE, bg="#121820")
+    titel.pack(anchor="w", padx=50, pady=30)
+
+    einstellungskarte = tk.Frame(hauptbereich, bg="#252F3B", padx=40, pady=35)
+    einstellungskarte.pack(anchor="nw", padx=50)
+
+    tk.Label(einstellungskarte, text="Konto verwalten", font=("Arial", 18, "bold"),
+             fg=WHITE, bg="#252F3B").pack(anchor="w", pady=(0, 15))
+
+    tk.Label(einstellungskarte, text="Hier kannst du dein Konto dauerhaft löschen.",
+             font=("Arial", 12), fg="#94A3B8", bg="#252F3B").pack(anchor="w", pady=(0, 20))
+
+    def konto_loeschen():
+
+        bestaetigung = messagebox.askyesno(
+            "Konto löschen",
+            "Möchtest du dein Konto wirklich löschen?\n\n"
+            "Alle deine Gewichtseinträge werden ebenfalls gelöscht.\n"
+            "Diese Aktion kann nicht rückgängig gemacht werden."
+        )
+
+        if bestaetigung:
+            db.delete_user(user_id)
+
+            messagebox.showinfo(
+                "Konto gelöscht",
+                "Dein Konto wurde erfolgreich gelöscht."
+            )
+
+            abmelden()
+
+    loeschen_button = tk.Button(einstellungskarte, text="Konto löschen",
+                                font=("Arial", 14, "bold"), bg="#DC2626", fg=WHITE,
+                                activebackground="#EF4444", relief="flat",
+                                cursor="hand2", padx=30, pady=12, command=konto_loeschen)
+
+    loeschen_button.pack(anchor="w")
 
 
 def startseite():
