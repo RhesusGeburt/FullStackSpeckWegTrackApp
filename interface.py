@@ -8,7 +8,7 @@ import graph
 main.start()
 
 root = tk.Tk()
-root.title("Startseite")
+root.title("FullStackSpeckWegTrackApp 1.0.75")
 root.geometry("1000x700")
 root.minsize(700, 500)
 root.state("zoomed")
