@@ -1,7 +1,7 @@
 from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
 import tkinter as tk
 import database as db
-from datetime import date
+from datetime import datetime
 import main
 import graph
 
@@ -219,7 +219,7 @@ def gewicht_anzeigen(username, user_id):
                     text="Bitte gib ein gültiges Gewicht ein!", fg="#ff6b81")
                 return
 
-            db.add_weight(user_id, gewicht, date.datetime.now())
+            db.add_weight(user_id, gewicht, datetime.now())
 
             ausgabe.config(
                 text="Gewicht erfolgreich gespeichert!", fg="#4ADE80")
@@ -234,6 +234,7 @@ def gewicht_anzeigen(username, user_id):
                                  fg=WHITE, activebackground=HOVER, relief="flat",
                                  cursor="hand2", padx=25, pady=12, command=speichern)
     speichern_button.pack(pady=10)
+
 
 def historie_anzeigen(username, user_id):
 
@@ -257,7 +258,6 @@ def historie_anzeigen(username, user_id):
     titel = tk.Label(hauptbereich, text="Dein Fortschritt",
                      font=("Arial", 30, "bold"), fg=WHITE, bg="#121820")
     titel.pack(anchor="w", padx=50, pady=(50, 10))
-
 
     fig1.set_size_inches(12, 7)
 
